@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Globalization;
+
 //using Ann_GA_Algorithm;
 
 public class IO
@@ -118,6 +120,7 @@ public class IO
      ************************************************************************/
     public static ANN ReadNetworkFromFile(string fileName)
     {
+        
         using (StreamReader sr = new StreamReader(fileName))
         {
             // Read number of layers
@@ -137,7 +140,10 @@ public class IO
                     string[] weights = sr.ReadLine().Split(' ');
                     for (int k = 0; k < network.weights[i][j].Length; k++)
                     {
-                        network.weights[i][j][k] = double.Parse(weights[k]);
+
+                        string cleaned = new string(weights[k].Where(c => char.IsDigit(c) || c == '.' || c == '-' || c == 'E' || c == 'e').ToArray());
+                        network.weights[i][j][k] = double.Parse(cleaned);
+                        //network.weights[i][j][k] = double.Parse(weights[k]);
                     }
                 }
 
@@ -150,7 +156,9 @@ public class IO
                 string[] biases = sr.ReadLine().Split(' ');
                 for (int j = 0; j < network.biases[i].Length; j++)
                 {
-                    network.biases[i][j] = double.Parse(biases[j]);
+                    string cleaned = new string(biases[j].Where(c => char.IsDigit(c) || c == '.' || c == '-' || c == 'E' || c == 'e').ToArray());
+                    network.biases[i][j] = double.Parse(cleaned);
+                    //network.biases[i][j] = double.Parse(biases[j]);
                 }
             }
 
@@ -158,7 +166,7 @@ public class IO
         }
 
     }
-    
+
     public static void WriteOutputData(string fileName, int[] predictions)
     {
         using (StreamWriter sw = new StreamWriter(fileName))
